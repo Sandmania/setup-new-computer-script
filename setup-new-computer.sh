@@ -32,19 +32,24 @@ README="https://github.com/vendasta/setup-new-computer-script#post-installation-
 
 
 # IDEs to make availabe. Please also adjust code to brew cask install
-options[0]="Visual Studio Code";    devtoolchoices[0]="+"
-options[1]="Jetbrains Toolbox";     devtoolchoices[6]=""
-options[2]="Pycharm";               devtoolchoices[1]=""
-options[3]="Goland";                devtoolchoices[2]=""
-options[4]="Webstorm";              devtoolchoices[3]=""
-options[5]="Sublime Text";          devtoolchoices[4]=""
-options[6]="iTerm2";                devtoolchoices[5]=""
+#options[0]="Visual Studio Code";    devtoolchoices[0]=""
+#options[5]="Sublime Text";          devtoolchoices[4]=""
+#options[6]="iTerm2";                devtoolchoices[5]=""
+
+cloudoptions[0]="AWS CLI"                       cloudchoices[0]=""
+cloudoptions[1]="Azure CLI"                     cloudchoices[1]=""
+cloudoptions[1]="Azure Functions Core Tools"    cloudchoices[2]=""
 
 
 #===============================================================================
 #  Functions
 #===============================================================================
 
+cleanup() {
+    printHeading "Installing Applications"
+    printStep "Remove file that was used to initiate password profile."  "rm askforpassworddelay.mobileconfig"
+}
+trap cleanup EXIT
 
 printHeading() {
     printf "\n\n\n\e[0;36m$1\e[0m \n"
@@ -100,6 +105,17 @@ showIDEMenuLoop() {
         echo ""
         for NUM in "${!options[@]}"; do
             echo "[""${devtoolchoices[NUM]:- }""]" $(( NUM+1 ))") ${options[NUM]}"
+        done
+        echo ""
+}
+
+showCloudMenuLoop() {
+    printLogo
+    printHeading "Select optional cloud tools"
+    printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+        echo ""
+        for NUM in "${!cloudoptions[@]}"; do
+            echo "[""${cloudchoices[NUM]:- }""]" $(( NUM+1 ))") ${cloudoptions[NUM]}"
         done
         echo ""
 }
@@ -160,6 +176,27 @@ do
             devtoolchoices[SELECTION]=""
         else
             devtoolchoices[SELECTION]="+"
+        fi
+            ERROR=" "
+    else
+        ERROR="Invalid option: $SELECTION"
+    fi
+done
+printDivider
+
+clear
+while 
+    showCloudMenuLoop && \
+    read -r -e -p "Enable or Disable by typing number. Hit ENTER to continue " \
+    -n1 SELECTION && [[ -n "$SELECTION" ]]; \
+do
+    clear
+    if [[ "$SELECTION" == *[[:digit:]]* && $SELECTION -ge 1 && $SELECTION -le ${#cloudoptions[@]} ]]; then
+        (( SELECTION-- ))
+        if [[ "${cloudchoices[SELECTION]}" == "+" ]]; then
+            cloudchoices[SELECTION]=""
+        else
+            cloudchoices[SELECTION]="+"
         fi
             ERROR=" "
     else
@@ -233,7 +270,6 @@ printDivider
 
 # Install Utilities
 printHeading "Installing Brew Packages"
-    printStep "zsh-completions"             "brew install zsh-completions"
     printStep "Git"                         "brew install git"
 printDivider
 
@@ -242,11 +278,14 @@ printDivider
 printHeading "Installing Applications"
     printStep "Slack"                       "brew install --cask slack"
     printStep "Firefox"                     "brew install --cask firefox"
+    printStep "Spotify"                     "brew install --cask spotify"
     printStep "Docker for Mac"              "brew install --cask docker"
     printStep "Visual Studio Code"          "brew install --cask visual-studio-code"
     printStep "IntelliJ IDEA Ultimate"      "brew install --cask intellij-idea"
     printStep "iTerm2"                      "brew install --cask iterm2"
     printStep "HTTPie"                      "brew install --cask httpie"
+    echo "✔ SDKMAN!: Download and install"
+    sh -c "$(curl -s https://get.sdkman.io)"
 printDivider
 
 
@@ -278,8 +317,20 @@ printDivider
 
 
 # Install AWS Components
-printHeading "Install AWS Components"
-    printStep "Homebre AWS CLI"       "brew install awscli"
+printHeading "Install cloud tools"
+    # Install aws cli
+    if [[ "${cloudchoices[0]}" == "+" ]]; then
+        printStep "Homebrew AWS CLI"       "brew install awscli"
+    fi
+    # Install azure cli
+    if [[ "${cloudchoices[1]}" == "+" ]]; then
+        printStep "Homebre Azure CLI"       "brew install azure-cli"
+    fi
+    # Install azure cli
+    if [[ "${cloudchoices[2]}" == "+" ]]; then
+        printStep "Tapping Azure Functions Core tools"      "brew tap azure/functions"
+        printStep "Homebrew Azure Functions Core Tools"     "brew install azure-functions-core-tools@4"
+    fi
 printDivider
 
 
@@ -310,14 +361,6 @@ printHeading "System Tweaks"
     echo "✔ Finder: Show the ~/Library folder"
         chflags nohidden ~/Library
     printDivider
-        
-    echo "✔ Safari: Enable Safari’s Developer Settings"
-        defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
-        defaults write com.apple.Safari IncludeDevelopMenu -bool true
-        defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
-        defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled -bool true
-        defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
-    printDivider
 printDivider
 
 
@@ -327,6 +370,19 @@ printHeading "Installing shell and visual stuff"
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 printDivider
 
+
+# Security and hardening
+printHeading "Security and hardening"
+    printStep "brew lulu"           "brew install lulu"
+    printStep "brew blockblock"     "brew install blockblock"
+    printDivider
+
+    echo "✔ Profiles: Installing ask for password porfile. This will open Profiles from System Preferenes."
+        sed -e "s/\${USER}/$(id -un)/" askforpassworddelay.mobileconfig.template > askforpassworddelay.mobileconfig
+        open askforpassworddelay.mobileconfig
+        open -b com.apple.systempreferences /System/Library/PreferencePanes/Profiles.prefPane
+    printDivider
+printDivider
 
 #===============================================================================
 #  Installer: Git
@@ -375,6 +431,8 @@ cat << "EOT"
    ├─────────────────────────────────────────────────────────────────┤
    │                                                                 │
    │   There are still a few steps you need to do to finish setup.   │
+   │                                                                 │
+   │  1. Accept the installation of password delay settings profile. │
    │                                                                 │
    │        The link below has Post Installation Instructions        │
    │                                                                 │
