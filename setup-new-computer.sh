@@ -224,6 +224,7 @@ printDivider
     if grep --quiet "setup-new-computer.sh" ~/.bash_profile; then
         echo "✔ .bash_profile already modified. Skipping"
     else
+        ## TODO FIXME I've removed writeToBashProfile
         writetoBashProfile
         echo "✔ Added to .bash_profile"
     fi
@@ -238,11 +239,6 @@ printDivider
 printDivider
     echo "(zsh) Rebuild zcompdump"
     rm -f ~/.zcompdump
-printDivider
-    echo "(zsh) Fix insecure directories warning"
-    chmod go-w "$(brew --prefix)/share"
-printDivider
-
 
 #===============================================================================
 #  Installer: Main Payload
@@ -267,10 +263,15 @@ printDivider
         export PATH=/usr/local/bin:$PATH
 printDivider
 
+printDivider
+    echo "(zsh) Fix insecure directories warning"
+    chmod go-w "$(brew --prefix)/share"
+printDivider
 
 # Install Utilities
 printHeading "Installing Brew Packages"
     printStep "Git"                         "brew install git"
+    printStep "HTTPie"                      "brew install httpie"
 printDivider
 
 
@@ -283,7 +284,7 @@ printHeading "Installing Applications"
     printStep "Visual Studio Code"          "brew install --cask visual-studio-code"
     printStep "IntelliJ IDEA Ultimate"      "brew install --cask intellij-idea"
     printStep "iTerm2"                      "brew install --cask iterm2"
-    printStep "HTTPie"                      "brew install --cask httpie"
+    printStep "HTTPie"                      "brew install httpie"
     echo "✔ SDKMAN!: Download and install"
     sh -c "$(curl -s https://get.sdkman.io)"
 printDivider
@@ -304,15 +305,6 @@ printDivider
 # Install Homebrew Python 3
 printHeading "Installing Homebrew Python 3"
     printStep "Homebrew Python 3 with Pip"       "brew reinstall python"
-printDivider
-
-# Install Azure Components
-printHeading "Install Azure Components"
-    printStep "Homebre Azure CLI"       "brew install azure-cli"
-    printDivider
-        echo "✔ Tapping Azure Functions Core tools"
-    printDivider
-    printStep "Homebre Azure Functions Core Tools"       "brew install azure-functions-core-tools@4"
 printDivider
 
 
