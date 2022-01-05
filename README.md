@@ -775,3 +775,12 @@ The following examples were helpful in building this script.
   - https://www.wisdomgeek.com/development/installing-intel-based-packages-using-homebrew-on-the-m1-mac/
   - https://github.com/Homebrew/discussions/discussions/417
 
+## TODO
+
+Things from hardening https://blog.bejarano.io/hardening-macos/
+
+Enable Application Layer Firewall (we’ll call it ALF for short)
+defaults write /Library/Preferences/com.apple.alf globalstate -int 1 
+
+Profile:
+AllowIdentifiedDevelopers https://mosen.github.io/profiledocs/payloads/mac/spctl.html#com.apple.systempolicy.control-AllowIdentifiedDevelopers-auto

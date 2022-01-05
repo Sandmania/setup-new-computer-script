@@ -373,10 +373,11 @@ printDivider
 
 # Security and hardening
 printHeading "Security and hardening"
-    printStep "brew lulu"           "brew install lulu"
-    printStep "brew blockblock"     "brew install blockblock"
+    printStep "Firewall: install additiona firewall - LuLu"             "brew install lulu"
+    echo "✔ Firewall: Enabling macOS inbuilt Application Level Firewall (ALF)."
+    defaults write /Library/Preferences/com.apple.alf globalstate -int 1
+    printStep "brew blockblock"                                         "brew install blockblock"
     printDivider
-
     echo "✔ Profiles: Installing ask for password porfile. This will open Profiles from System Preferenes."
         sed -e "s/\${USER}/$(id -un)/" askforpassworddelay.mobileconfig.template > askforpassworddelay.mobileconfig
         open askforpassworddelay.mobileconfig
@@ -411,6 +412,14 @@ printDivider
     else
         read -p 'What is your Git display name (Firstname Lastname)?: ' gitName
         git config --global user.name "$gitName"
+    fi
+printDivider
+    if [ -n "$(git config --global core.excludesfile)" ]; then
+        echo "✔ Git global gitignore file is set to $(git config --global core.excludesfile)"
+    else
+        echo "✔ Copy .gitignore to ~/.gitignore and use it as a global gitignore file"
+        cp .gitignore ~/.gitignore
+        git config --global core.excludesfile ~/.gitignore
     fi
 printDivider
 
