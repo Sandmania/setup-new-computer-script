@@ -46,7 +46,7 @@ cloudoptions[1]="Azure Functions Core Tools"    cloudchoices[2]=""
 #===============================================================================
 
 cleanup() {
-    printHeading "Installing Applications"
+    printHeading "Cleanup"
     printStep "Remove file that was used to initiate password profile."  "rm askforpassworddelay.mobileconfig"
 }
 trap cleanup EXIT
@@ -212,22 +212,11 @@ printDivider
 #===============================================================================
 
 
-# Create .bash_profile and .zprofile if they dont exist
-printHeading "Prep Bash and Zsh"
-printDivider
-    echo "✔ Touch ~/.bash_profile"
-        touch ~/.bash_profile
+# Create .zprofile if they dont exist
+printHeading "Prep Zsh"
 printDivider
     echo "✔ Touch ~/.zprofile"
         touch ~/.zprofile
-printDivider
-    if grep --quiet "setup-new-computer.sh" ~/.bash_profile; then
-        echo "✔ .bash_profile already modified. Skipping"
-    else
-        ## TODO FIXME I've removed writeToBashProfile
-        writetoBashProfile
-        echo "✔ Added to .bash_profile"
-    fi
 printDivider
     # Zsh profile
     if grep --quiet "setup-new-computer.sh" ~/.zprofile; then
@@ -262,7 +251,8 @@ printDivider
     echo "✔ Setting Path to /usr/local/bin:\$PATH"
         export PATH=/usr/local/bin:$PATH
 printDivider
-
+    echo "✔ Opting out from Homebrew analytics"
+        brew analytics off
 printDivider
     echo "(zsh) Fix insecure directories warning"
     chmod go-w "$(brew --prefix)/share"
@@ -284,7 +274,6 @@ printHeading "Installing Applications"
     printStep "Visual Studio Code"          "brew install --cask visual-studio-code"
     printStep "IntelliJ IDEA Ultimate"      "brew install --cask intellij-idea"
     printStep "iTerm2"                      "brew install --cask iterm2"
-    printStep "HTTPie"                      "brew install httpie"
     echo "✔ SDKMAN!: Download and install"
     sh -c "$(curl -s https://get.sdkman.io)"
 printDivider
@@ -356,11 +345,12 @@ printHeading "System Tweaks"
 printDivider
 
 
+# TODO FIXME: Installing oh-my-zsh like this will stop the script after installation is finished. Maybe look into https://github.com/jotyGill/ezsh
 # Shell and visuals
-printHeading "Installing shell and visual stuff"
-    echo "✔ Installing oh-my-zsh"
-    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-printDivider
+#printHeading "Installing shell and visual stuff"
+#    echo "✔ Installing oh-my-zsh"
+#    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+#printDivider
 
 
 # Security and hardening
