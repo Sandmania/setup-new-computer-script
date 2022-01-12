@@ -344,13 +344,20 @@ printHeading "System Tweaks"
     printDivider
 printDivider
 
-
-# TODO FIXME: Installing oh-my-zsh like this will stop the script after installation is finished. Maybe look into https://github.com/jotyGill/ezsh
-# Shell and visuals
-#printHeading "Installing shell and visual stuff"
-#    echo "✔ Installing oh-my-zsh"
-#    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-#printDivider
+printHeading "Installing shell and visual stuff"
+    echo "✔ Installing additional fonts"
+        https -F https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf > ~/Library/Fonts/MesloLGSNFRegular.ttf
+        https -F https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf > ~/Library/Fonts/MesloLGSNFBold.ttf
+        https -F https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf > ~/Library/Fonts/MesloLGSNFItalic.ttf
+        https -F https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf > ~/Library/Fonts/MesloLGSNFBoldItalic.ttf
+    echo "✔ Installing oh-my-zsh"
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+        #git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
+        #cp ~/.zshrc ~/.zshrc.orig
+    echo "✔ Installing powerlevel10k"
+        git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+        cp dotp10k.zsh ~/.p10k.sh
+printDivider
 
 
 # Security and hardening
