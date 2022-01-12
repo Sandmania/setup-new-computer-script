@@ -32,7 +32,9 @@ README="https://github.com/vendasta/setup-new-computer-script#post-installation-
 
 
 # IDEs to make availabe. Please also adjust code to brew cask install
-#options[0]="Visual Studio Code";    devtoolchoices[0]=""
+options[0]="Visual Studio Code";        devtoolchoices[0]="+"
+options[1]="IntelliJ IDEA Ultimate";    devtoolchoices[1]=""
+options[2]="Docker for Mac";            devtoolchoices[2]=""
 #options[5]="Sublime Text";          devtoolchoices[4]=""
 #options[6]="iTerm2";                devtoolchoices[5]=""
 
@@ -277,10 +279,19 @@ printHeading "Installing Applications"
     printStep "Slack"                       "brew install --cask slack"
     printStep "Firefox"                     "brew install --cask firefox"
     printStep "Spotify"                     "brew install --cask spotify"
-    printStep "Docker for Mac"              "brew install --cask docker"
-    printStep "Visual Studio Code"          "brew install --cask visual-studio-code"
-    printStep "IntelliJ IDEA Ultimate"      "brew install --cask intellij-idea"
     printStep "iTerm2"                      "brew install --cask iterm2"
+    # Install Visual Studio Code
+    if [[ "${devtoolchoices[0]}" == "+" ]]; then
+        printStep "Visual Studio Code"      "brew install --cask visual-studio-code"
+    fi
+    # Install IntelliJ IDEA Ultimate
+    if [[ "${devtoolchoices[1]}" == "+" ]]; then
+        printStep "IntelliJ IDEA Ultimate"      "brew install --cask intellij-idea"
+    fi
+    # Install Docker for Mac
+    if [[ "${devtoolchoices[2]}" == "+" ]]; then
+        printStep "Docker for Mac"              "brew install --cask docker"
+    fi
     echo "✔ SDKMAN!: Download and install"
     sh -c "$(curl -s https://get.sdkman.io)"
 printDivider
