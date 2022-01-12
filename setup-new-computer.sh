@@ -47,7 +47,7 @@ cloudoptions[1]="Azure Functions Core Tools"    cloudchoices[2]=""
 
 cleanup() {
     printHeading "Cleanup"
-    printStep "Remove file that was used to initiate password profile."  "rm askforpassworddelay.mobileconfig"
+    printInfo "Remove file that was used to initiate password profile."  "rm -f askforpassworddelay.mobileconfig"
 }
 trap cleanup EXIT
 
@@ -76,6 +76,12 @@ printError() {
 printStep() {
     printf %"$COLUMNS"s |tr " " "-"
     printf "\nInstalling $1...\n";
+    $2 || printError "$1"
+}
+
+printInfo() {
+    printf %"$COLUMNS"s |tr " " "-"
+    printf "\n$1...\n";
     $2 || printError "$1"
 }
 
@@ -309,7 +315,7 @@ printHeading "Install cloud tools"
     fi
     # Install azure cli
     if [[ "${cloudchoices[2]}" == "+" ]]; then
-        printStep "Tapping Azure Functions Core tools"      "brew tap azure/functions"
+        echo "Tapping Azure Functions Core tools"           "brew tap azure/functions"
         printStep "Homebrew Azure Functions Core Tools"     "brew install azure-functions-core-tools@4"
     fi
 printDivider
