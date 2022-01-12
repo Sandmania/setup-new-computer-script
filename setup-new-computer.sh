@@ -159,7 +159,8 @@ fpath=(/usr/local/share/zsh-completions \$fpath)
 EOT
 }
 
-# Get root user for later. Brew needs the user to be admin to install 
+# Get root user for later. Brew needs the user to be admin to install
+echo "You will be prompted for sudo password. Homebrew needs the user to be admin to install." 
 sudo ls > /dev/null
 
 
@@ -315,7 +316,7 @@ printHeading "Install cloud tools"
     fi
     # Install azure cli
     if [[ "${cloudchoices[2]}" == "+" ]]; then
-        echo "Tapping Azure Functions Core tools"           "brew tap azure/functions"
+        printInfo "Tapping Azure Functions Core tools"           "brew tap azure/functions"
         printStep "Homebrew Azure Functions Core Tools"     "brew install azure-functions-core-tools@4"
     fi
 printDivider
