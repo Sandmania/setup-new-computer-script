@@ -46,7 +46,7 @@ cloudoptions[1]="Azure Functions Core Tools"    cloudchoices[2]=""
 #===============================================================================
 
 cleanup() {
-    printHeading "Cleanup"
+    printHeading "Installing Applications"
     printStep "Remove file that was used to initiate password profile."  "rm askforpassworddelay.mobileconfig"
 }
 trap cleanup EXIT
@@ -212,11 +212,21 @@ printDivider
 #===============================================================================
 
 
-# Create .zprofile if they dont exist
-printHeading "Prep Zsh"
+# Create .bash_profile and .zprofile if they dont exist
+printHeading "Prep Bash and Zsh"
+printDivider
+    echo "✔ Touch ~/.bash_profile"
+        touch ~/.bash_profile
 printDivider
     echo "✔ Touch ~/.zprofile"
         touch ~/.zprofile
+printDivider
+    if grep --quiet "setup-new-computer.sh" ~/.bash_profile; then
+        echo "✔ .bash_profile already modified. Skipping"
+    else
+        writetoBashProfile
+        echo "✔ Added to .bash_profile"
+    fi
 printDivider
     # Zsh profile
     if grep --quiet "setup-new-computer.sh" ~/.zprofile; then
@@ -228,6 +238,11 @@ printDivider
 printDivider
     echo "(zsh) Rebuild zcompdump"
     rm -f ~/.zcompdump
+printDivider
+    echo "(zsh) Fix insecure directories warning"
+    chmod go-w "$(brew --prefix)/share"
+printDivider
+
 
 #===============================================================================
 #  Installer: Main Payload
@@ -251,17 +266,11 @@ printDivider
     echo "✔ Setting Path to /usr/local/bin:\$PATH"
         export PATH=/usr/local/bin:$PATH
 printDivider
-    echo "✔ Opting out from Homebrew analytics"
-        brew analytics off
-printDivider
-    echo "(zsh) Fix insecure directories warning"
-    chmod go-w "$(brew --prefix)/share"
-printDivider
+
 
 # Install Utilities
 printHeading "Installing Brew Packages"
     printStep "Git"                         "brew install git"
-    printStep "HTTPie"                      "brew install httpie"
 printDivider
 
 
@@ -274,10 +283,15 @@ printHeading "Installing Applications"
     printStep "Visual Studio Code"          "brew install --cask visual-studio-code"
     printStep "IntelliJ IDEA Ultimate"      "brew install --cask intellij-idea"
     printStep "iTerm2"                      "brew install --cask iterm2"
+    printStep "HTTPie"                      "brew install --cask httpie"
+    printStep "Rectangle"                   "brew install --cask rectangle"
     echo "✔ SDKMAN!: Download and install"
     sh -c "$(curl -s https://get.sdkman.io)"
 printDivider
 
+printHeading "Copy iTerm2 configuration"
+    cp com.googlecode.iterm2.plist ~/Library/Preferenes/
+printDivider
 
 # Install Mac OS Python Pip and Packages
 # Run this before "Homebrew Python 3" to make sure "Homebrew Python 3" will overwrite pip3
@@ -294,6 +308,15 @@ printDivider
 # Install Homebrew Python 3
 printHeading "Installing Homebrew Python 3"
     printStep "Homebrew Python 3 with Pip"       "brew reinstall python"
+printDivider
+
+# Install Azure Components
+printHeading "Install Azure Components"
+    printStep "Homebre Azure CLI"       "brew install azure-cli"
+    printDivider
+        echo "✔ Tapping Azure Functions Core tools"
+    printDivider
+    printStep "Homebre Azure Functions Core Tools"       "brew install azure-functions-core-tools@4"
 printDivider
 
 
@@ -345,21 +368,25 @@ printHeading "System Tweaks"
 printDivider
 
 
-# TODO FIXME: Installing oh-my-zsh like this will stop the script after installation is finished. Maybe look into https://github.com/jotyGill/ezsh
 # Shell and visuals
-#printHeading "Installing shell and visual stuff"
-#    echo "✔ Installing oh-my-zsh"
-#    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-#printDivider
+printHeading "Installing shell and visual stuff"
+    echo "✔ Installing additional fonts"
+        https -F https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf > ~/Library/Fonts/MesloLGSNFRegular.ttf
+        https -F https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf > ~/Library/Fonts/MesloLGSNFBold.ttf
+        https -F https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf > ~/Library/Fonts/MesloLGSNFItalic.ttf
+        https -F https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf > ~/Library/Fonts/MesloLGSNFBoldItalic.ttf
+    echo "✔ Installing oh-my-zsh"
+        git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
+        cp ~/.zshrc ~/.zshrc.orig
+printDivider
 
 
 # Security and hardening
 printHeading "Security and hardening"
-    printStep "Firewall: install additiona firewall - LuLu"             "brew install lulu"
-    echo "✔ Firewall: Enabling macOS inbuilt Application Level Firewall (ALF)."
-    defaults write /Library/Preferences/com.apple.alf globalstate -int 1
-    printStep "brew blockblock"                                         "brew install blockblock"
+    printStep "brew lulu"           "brew install lulu"
+    printStep "brew blockblock"     "brew install blockblock"
     printDivider
+
     echo "✔ Profiles: Installing ask for password porfile. This will open Profiles from System Preferenes."
         sed -e "s/\${USER}/$(id -un)/" askforpassworddelay.mobileconfig.template > askforpassworddelay.mobileconfig
         open askforpassworddelay.mobileconfig
@@ -394,14 +421,6 @@ printDivider
     else
         read -p 'What is your Git display name (Firstname Lastname)?: ' gitName
         git config --global user.name "$gitName"
-    fi
-printDivider
-    if [ -n "$(git config --global core.excludesfile)" ]; then
-        echo "✔ Git global gitignore file is set to $(git config --global core.excludesfile)"
-    else
-        echo "✔ Copy .gitignore to ~/.gitignore and use it as a global gitignore file"
-        cp .gitignore ~/.gitignore
-        git config --global core.excludesfile ~/.gitignore
     fi
 printDivider
 
