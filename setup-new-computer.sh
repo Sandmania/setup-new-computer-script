@@ -40,7 +40,7 @@ options[2]="Docker for Mac";            devtoolchoices[2]=""
 
 cloudoptions[0]="AWS CLI"                       cloudchoices[0]=""
 cloudoptions[1]="Azure CLI"                     cloudchoices[1]=""
-cloudoptions[1]="Azure Functions Core Tools"    cloudchoices[2]=""
+cloudoptions[2]="Azure Functions Core Tools"    cloudchoices[2]=""
 
 
 #===============================================================================
@@ -280,6 +280,7 @@ printHeading "Installing Applications"
     printStep "Firefox"                     "brew install --cask firefox"
     printStep "Spotify"                     "brew install --cask spotify"
     printStep "iTerm2"                      "brew install --cask iterm2"
+    printStep "Bitwarden"                   "brew install --cask bitwarden"
     # Install Visual Studio Code
     if [[ "${devtoolchoices[0]}" == "+" ]]; then
         printStep "Visual Studio Code"      "brew install --cask visual-studio-code"
@@ -369,7 +370,6 @@ printHeading "Installing shell and visual stuff"
         https -F https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf > ~/Library/Fonts/MesloLGSNFItalic.ttf
         https -F https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf > ~/Library/Fonts/MesloLGSNFBoldItalic.ttf
     echo "✔ Installing oh-my-zsh"
-        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
         git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
     echo "✔ Installing powerlevel10k"
         git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
@@ -381,10 +381,10 @@ printDivider
 
 # Security and hardening
 printHeading "Security and hardening"
-    printStep "Firewall: install additiona firewall - LuLu"             "brew install lulu"
+    printStep "LuLu"                                                "brew install lulu"
+    printStep "blockblock"                                          "brew install blockblock"
     echo "✔ Firewall: Enabling macOS inbuilt Application Level Firewall (ALF)."
     defaults write /Library/Preferences/com.apple.alf globalstate -int 1
-    printStep "brew blockblock"                                         "brew install blockblock"
     printDivider
     echo "✔ Profiles: Installing ask for password porfile. This will open Profiles from System Preferenes."
         sed -e "s/\${USER}/$(id -un)/" askforpassworddelay.mobileconfig.template > askforpassworddelay.mobileconfig
