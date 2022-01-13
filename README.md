@@ -73,7 +73,7 @@ brew switch git 2.25.0
 
 ## Tips for using the script at your own company
 
-- To customize the [welcome logo](https://github.com/vendasta/setup-new-computer-script/blob/47b7c97f21b293e143a0566cafecec2cfc69c528/setup-new-computer.sh#L74-L90) and add a bit of style, I used the handy [Text to ASCII Art Generator](https://patorjk.com/software/taag/#p=testall&f=Isometric1&t=Vendasta)
+- To customize the [welcome logo](https://github.com/vendasta/setup-new-computer-script/blob/47b7c97f21b293e143a0566cafecec2cfc69c528/setup-new-computer.sh#L74-L90) and add a bit of style, I used the handy [Text to ASCII Art Generator](https://patorjk.com/software/taag/#p=display&f=ANSI%20Regular&t=Sandman)
 - This is MIT licensed, so be sure to include the [LICENSE file](https://github.com/vendasta/setup-new-computer-script/blob/master/LICENSE)
 
 
@@ -87,6 +87,11 @@ The following examples were helpful in building this script.
   https://github.com/donnemartin/dev-setup#dev-setup
 * thoughtbot/laptop\
   https://github.com/thoughtbot/laptop
+* hardening macOs\
+  https://blog.bejarano.io/hardening-macos/
+* Configuration Profile Reference\
+  https://developer.apple.com/business/documentation/Configuration-Profile-Reference.pdf \
+  https://mosen.github.io/profiledocs/
 
 
 ## Todo: Prep for M1 compatibility 
@@ -104,10 +109,4 @@ The following examples were helpful in building this script.
 
 ## TODO
 
-Things from hardening https://blog.bejarano.io/hardening-macos/
-
-Enable Application Layer Firewall (we’ll call it ALF for short)
-defaults write /Library/Preferences/com.apple.alf globalstate -int 1 
-
-Profile:
-AllowIdentifiedDevelopers https://mosen.github.io/profiledocs/payloads/mac/spctl.html#com.apple.systempolicy.control-AllowIdentifiedDevelopers-auto
+More things from hardening https://blog.bejarano.io/hardening-macos/

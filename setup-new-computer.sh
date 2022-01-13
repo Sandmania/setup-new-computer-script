@@ -10,7 +10,7 @@ VERSION="v2.0.1"
 # 
 #===============================================================================
 #   A shell script to help with the quick setup and installation of tools and 
-#   applications for new developers at Vendasta.
+#   applications for new computer.
 # 
 #   Quick Instructions:
 #
@@ -26,7 +26,7 @@ VERSION="v2.0.1"
 #      Use the email and name you use for Github
 #
 #   5. Follow the Post Installation Instructions in the Readme:
-README="https://github.com/vendasta/setup-new-computer-script#post-installation-instructions"
+README="https://github.com/sandmania/setup-new-computer-script#post-installation-instructions"
 #  
 #===============================================================================
 
@@ -370,11 +370,12 @@ printHeading "Installing shell and visual stuff"
         https -F https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf > ~/Library/Fonts/MesloLGSNFBoldItalic.ttf
     echo "✔ Installing oh-my-zsh"
         sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-        #git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
-        #cp ~/.zshrc ~/.zshrc.orig
+        git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
     echo "✔ Installing powerlevel10k"
         git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
         cp dotp10k.zsh ~/.p10k.zsh
+    echo "✔ Configuring zsh"
+        cp dotzshrc ~/.zshrc
 printDivider
 
 
