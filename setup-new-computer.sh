@@ -33,8 +33,8 @@ README="https://github.com/sandmania/setup-new-computer-script#post-installation
 
 # IDEs to make availabe. Please also adjust code to brew cask install
 options[0]="Visual Studio Code";        devtoolchoices[0]="+"
-options[1]="IntelliJ IDEA Ultimate";    devtoolchoices[1]=""
-options[2]="Docker for Mac";            devtoolchoices[2]=""
+options[1]="JetBrains Toolbox";    devtoolchoices[1]=""
+#options[2]="Docker for Mac";            devtoolchoices[2]=""
 #options[5]="Sublime Text";          devtoolchoices[4]=""
 #options[6]="iTerm2";                devtoolchoices[5]=""
 
@@ -287,7 +287,7 @@ printHeading "Installing Applications"
     fi
     # Install IntelliJ IDEA Ultimate
     if [[ "${devtoolchoices[1]}" == "+" ]]; then
-        printStep "IntelliJ IDEA Ultimate"      "brew install --cask intellij-idea"
+        printStep "JetBrains Toolbox"      "brew install jetbrains-toolbox"
     fi
     # Install Docker for Mac
     if [[ "${devtoolchoices[2]}" == "+" ]]; then
@@ -376,6 +376,8 @@ printHeading "Installing shell and visual stuff"
         cp dotp10k.zsh ~/.p10k.zsh
     echo "✔ Configuring zsh"
         cp dotzshrc ~/.zshrc
+    echo "✔ Configuring iTerm2"
+        cp com.googlecode.iterm2.plist ~/Library/Preferences/
 printDivider
 
 
@@ -384,9 +386,9 @@ printHeading "Security and hardening"
     printStep "LuLu"                                                "brew install lulu"
     printStep "blockblock"                                          "brew install blockblock"
     echo "✔ Firewall: Enabling macOS inbuilt Application Level Firewall (ALF)."
-    defaults write /Library/Preferences/com.apple.alf globalstate -int 1
+        sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 1
     printDivider
-    echo "✔ Profiles: Installing ask for password porfile. This will open Profiles from System Preferenes."
+    echo "✔ Profiles: Installing ask for password profile. This will open Profiles from System Preferences."
         sed -e "s/\${USER}/$(id -un)/" askforpassworddelay.mobileconfig.template > askforpassworddelay.mobileconfig
         open askforpassworddelay.mobileconfig
         open -b com.apple.systempreferences /System/Library/PreferencePanes/Profiles.prefPane

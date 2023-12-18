@@ -89,12 +89,17 @@ The following examples were helpful in building this script.
   https://github.com/thoughtbot/laptop
 * hardening macOs\
   https://blog.bejarano.io/hardening-macos/
+* macOS Security and Privacy Guide\
+  https://github.com/drduh/macOS-Security-and-Privacy-Guide
+* osx lockdown\
+  https://github.com/SummitRoute/osxlockdown
 * Configuration Profile Reference\
   https://developer.apple.com/business/documentation/Configuration-Profile-Reference.pdf \
   https://mosen.github.io/profiledocs/
 
 
-## Todo: Prep for M1 compatibility 
+## TODO
+### Prep for M1 compatibility
 
 - Install Rosetta 2 (Is it not installed by default or automatically?)\
   `/usr/sbin/softwareupdate --install-rosetta` \
@@ -106,7 +111,3 @@ The following examples were helpful in building this script.
 - More reading:
   - https://www.wisdomgeek.com/development/installing-intel-based-packages-using-homebrew-on-the-m1-mac/
   - https://github.com/Homebrew/discussions/discussions/417
-
-## TODO
-
-More things from hardening https://blog.bejarano.io/hardening-macos/
